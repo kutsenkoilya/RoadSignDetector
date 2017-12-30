@@ -2,17 +2,6 @@
 """
 Распознаввтель знаков по картинке
 
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\01_test.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\02_test.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\03_test.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\04_test.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\05_test.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\06_test.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\07_test.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\08_test_r.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\09_test_r.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\10_test_r.jpg
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\11_test_r.jpg
 """
 
 import matplotlib.pyplot as plt
@@ -25,7 +14,7 @@ import sys
 import os
 import imutils
 
-filepath = 'D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\pic\\roadswsigns\\'
+filepath = '_verification\\pic\\roadswsigns\\'
 datasetLen = len(os.listdir(filepath))
 
 

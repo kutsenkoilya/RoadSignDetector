@@ -3,13 +3,8 @@
 Распознаввтель квадратных знаков
 Под данным с камеры
 
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\vid\\solidWhiteRight.mp4
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\vid\\solidYellowLeft.mp4
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\vid\\project_video.mp4
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\vid\\challenge_video.mp4
-D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\vid\\challenge.mp4
 """
-from lib_squareSignDetector import findTrafficSign
+from lib_squareSignDetector import findSquareTrafficSign
 import cv2
 import numpy as np
 import sys
@@ -28,7 +23,8 @@ while camera.isOpened():
         if (not ret):
             break
         
-        mod = findTrafficSign(frame)
+        mod = findSquareTrafficSign(frame,False)
+        
         cv2.imshow('modified', mod)
         cv2.imshow('original', frame)
     
