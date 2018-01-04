@@ -31,4 +31,6 @@ lib_squareSignDetector.py - метод распознавания квадрат
 
 lib_roundSignDetector.py - метод распознавания круглых знаков (работает как квадратные)
 
-lib_straightLineDetector.py - метод распознавания прямых полос разметки
+lib_straightLaneDetector.py - метод распознавания прямых полос разметки
+
+lib_curvedLaneDetector.py - метод распознавания изогнутой разметки
