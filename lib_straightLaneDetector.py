@@ -132,7 +132,7 @@ def weighted_img(img, initial_img, α=0.8, β=1., λ=0.):
     return cv2.addWeighted(initial_img, α, img, β, λ)
 
 
-def detectAndDraw_StraightLine(image,p_first_frame,p_cache):
+def detectAndDraw_StraightLane(image,p_first_frame,p_cache):
     
     global first_frame
     global cache

@@ -10,7 +10,7 @@ D:\\ComputerVision\\_robocar\\laneDetection\\_verification\\vid\\challenge.mp4
 
 """
 
-from lib_straightLineDetector import detectAndDraw_StraightLine
+from lib_straightLaneDetector import detectAndDraw_StraightLane
 import cv2
 import numpy as np
 import sys
@@ -30,7 +30,7 @@ while cap.isOpened():
         if (not ret):
             break
         
-        prcframe = detectAndDraw_StraightLine(frame,first_frame,cache)
+        prcframe = detectAndDraw_StraightLane(frame,first_frame,cache)
         cache = frame
         
         cv2.imshow('original', frame)
