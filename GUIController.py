@@ -8,7 +8,7 @@ Created on Sun Jan 28 23:53:11 2018
 from __future__ import print_function
 from PIL import Image
 from PIL import ImageTk
-import Tkinter as tki
+import tkinter as tki
 import threading
 import imutils
 import cv2
