@@ -12,6 +12,7 @@ import tkinter as tki
 import threading
 import imutils
 import cv2
+import time
 
 from GPIOController import GPIOController
 
@@ -24,18 +25,11 @@ class GUIController:
         self.root = tki.Tk()
         self.panel = None
         self.gpiocontroller = GPIOController()
-        
-        tki.Button(self.root, text="<",command=self.goLeftFull).grid(row = 2, column = 1)
-        tki.Button(self.root, text="\\",command=self.goLeft).grid(row = 2, column = 2)
-        tki.Button(self.root, text="/\\",command=self.goStraight).grid(row = 2, column = 3)
-        tki.Button(self.root, text="/",command=self.goRight).grid(row = 2, column = 4)
-        tki.Button(self.root, text=">",command=self.goRightFull).grid(row = 2, column = 5)
-        
-        tki.Button(self.root, text="R",command=self.goBack).grid(row = 3, column = 1)
-        tki.Button(self.root, text="P",command=self.doStop).grid(row = 3, column = 2)
-        tki.Button(self.root, text="10",command=self.goFwdTen).grid(row = 3, column = 3)
-        tki.Button(self.root, text="25",command=self.goFwdTFive).grid(row = 3, column = 4)
-        tki.Button(self.root, text="40",command=self.goFwdFty).grid(row = 4, column = 5)
+        tki.Button(self.root, text="/\\",command=self.goStraight).grid(row = 2, column = 2)
+        tki.Button(self.root, text="<",command=self.goLeftFull).grid(row = 3, column = 1)
+        tki.Button(self.root, text="S",command=self.doStop).grid(row = 3, column = 2)
+        tki.Button(self.root, text=">",command=self.goRightFull).grid(row = 3, column = 3)
+        tki.Button(self.root, text="\\/",command=self.goBack).grid(row = 4, column = 2)
         
         self.stopEvent = threading.Event()
         self.thread = threading.Thread(target=self.videoLoop, args=())
@@ -53,7 +47,7 @@ class GUIController:
                 if self.panel is None:
                     self.panel = tki.Label(image=image)
                     self.panel.image = image
-                    self.panel.grid(row = 1, columnspan=5)
+                    self.panel.grid(row = 1, columnspan=3)
                 else:
                     self.panel.configure(image=image)
                     self.panel.image = image
@@ -61,37 +55,18 @@ class GUIController:
             print("[INFO] caught a RuntimeError")
     
     def goLeftFull(self):
-        self.gpiocontroller.servoTurn(1)
-    def goLeft(self):
-        self.gpiocontroller.servoTurn(2)
+        self.gpiocontroller.TrunLeft()
     def goStraight(self):
-        self.gpiocontroller.servoTurn(3)
-    def goRight(self):
-        self.gpiocontroller.servoTurn(4)
+        self.gpiocontroller.GoForward()
     def goRightFull(self):
-        self.gpiocontroller.servoTurn(5)
-    
+        self.gpiocontroller.TurnRight()
     def goBack(self):
-        self.gpiocontroller.setSpeed(10)
-        self.gpiocontroller.wheelsGoForward()
-        
+        self.gpiocontroller.GoBackward()
     def doStop(self):
-        self.gpiocontroller.setSpeed(0)
-        
-    def goFwdTen(self):
-        self.gpiocontroller.setSpeed(10)
-        self.gpiocontroller.wheelsGoBackward()
-        
-    def goFwdTFive(self):
-        self.gpiocontroller.setSpeed(25)
-        self.gpiocontroller.wheelsGoBackward()
-        
-    def goFwdFty(self):
-        self.gpiocontroller.setSpeed(40)
-        self.gpiocontroller.wheelsGoBackward()
-        
+        self.gpiocontroller.Stop()
     def onClose(self):
         print("[INFO] closing...")
+        self.gpiocontroller.stopAll()
         cv2.destroyAllWindows()  
         self.stopEvent.set()
         self.vs.stop()

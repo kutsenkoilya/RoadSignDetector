@@ -9,11 +9,12 @@ controller.wheelsGoForward()
 #колёсам нужно примерно 10 сек на прогрев!!!
 time.sleep(10)
 
-controller.servoTurn(1)
-time.sleep(1)
-controller.servoTurn(3)
 
 try:
+
+    controller.servoTurn(1)
+    time.sleep(0.1)
+    """
     i = 1
     while i<6:
         print(i)
@@ -21,6 +22,7 @@ try:
         controller.servoTurn(i)
         i = i + 1
         time.sleep(5)
+    """
         
     controller.stopAll()
     
