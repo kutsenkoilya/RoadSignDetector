@@ -15,24 +15,43 @@ import time
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
+import numpy as np
 
-def GoForward():
-    ser.write(struct.pack('>3B', 125, 128, 2)) 
+def Forward(spd):
+    ser.write(struct.pack('>3B', 125, spd, 2)) 
 	
-def GoBackward():
-    ser.write(struct.pack('>3B', 125, 128, 0)) 
-
-def TrunLeft():
-    ser.write(struct.pack('>3B', 160, 128, 2)) 
+def ForwardLeft(spd):
+    ser.write(struct.pack('>3B', 160, spd, 2)) 
         
-def TurnRight():
-    ser.write(struct.pack('>3B', 90, 128, 2)) 
+def ForwardRight(spd):
+    ser.write(struct.pack('>3B', 90, spd, 2)) 
+
+def Backward(spd):
+    ser.write(struct.pack('>3B', 125, spd, 0)) 
+
+def BackwardLeft(spd):
+    ser.write(struct.pack('>3B', 160, spd, 0)) 
+
+def BackwardRight(spd):
+    ser.write(struct.pack('>3B', 90, spd, 0)) 
 
 def Stop():
-    ser.write(struct.pack('>3B', 125, 128, 1)) 
+    ser.write(struct.pack('>3B', 125, 0, 1)) 
     
 def stopAll():
     ser.close()
+
+def Sensor_LaneCalculator(sensor):
+    edgeArr = np.where( sensor == 255 )
+    if (edgeArr is not None and edgeArr[1] is not None and len(edgeArr[1])>0):
+        minInd = edgeArr[1][0]
+        maxInd = edgeArr[1][-1]
+        if (maxInd - minInd <= CarSettings.LaneMaxW):
+            return int((maxInd+minInd)/2)
+    return 0
+
+first_image = 1
+cache = None
 
 recEnabled = CarSettings.RecEnabled
 
@@ -53,11 +72,35 @@ ser = serial.Serial('/dev/ttyUSB0', 9600)
 key_p = None
 wait_time = 1
 
+speed = CarSettings.StartSpeed
+print("car speed: {}".format(speed))
 
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    
     image = frame.array
     
+    croppedImg = image[CarSettings.CroppedH:CarSettings.PiCameraResH,
+                       CarSettings.CroppedW:CarSettings.PiCameraResW]
+    
+    cannyImg = cv2.Canny(croppedImg,100,200)
+    
+    pointsArr = []
+    
+    for i in range(0,CarSettings.CroppedH,CarSettings.SensorStep):
+        sensor = cannyImg[i:i+1,:]
+        avg = Sensor_LaneCalculator(sensor)
+        if (avg != 0):
+            point = tuple([avg,i])
+            pointsArr.append(point)
+    
+    if (len(pointsArr)>2):
+        cv2.line(croppedImg, pointsArr[0],pointsArr[-1],(0,0,0), 2)
+        for point in pointsArr:
+            cv2.circle(croppedImg, point,4,(0,255,255),4)
+    
     cv2.imshow("Frame", image)
+    cv2.imshow("cropped", croppedImg)
+    
     if (recEnabled == 1):
         out.write(image)
 
@@ -72,21 +115,42 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
                 if (recEnabled == 1):
                     out.release()
                 break
+            
+            if (key == ord('q')):
+                ForwardLeft(speed)
+                print('Fwd Left')
             if (key == ord('w')):
-                GoForward()
-                print('Going forward')
+                Forward(speed)
+                print('Fwd')
+            if (key == ord('e')):
+                ForwardRight(speed)
+                print('Fwd Right')
+
             if (key == ord('a')):
-                TrunLeft()
-                print('Going left')
+                BackwardLeft(speed)
+                print('Bck Left')
             if (key == ord('s')):
-                GoBackward()
-                print('Going back')
+                Backward(speed)
+                print('Bck')
             if (key == ord('d')):
-                TurnRight()
-                print('Going right')
+                BackwardRight(speed)
+                print('Bck Right')
+
             if (key == ord('f')):
                 Stop()
                 print('stop')
+
+            if (key == ord('[')):
+                speed = speed - 50
+                if (speed < 50):
+                    speed = 50 
+                print("car speed: {}".format(speed))   
+            if (key == ord(']')):
+                speed = speed + 50
+                if (speed > 255):
+                    speed = 255
+                print("car speed: {}".format(speed))
+
         key_p = key
     
     rawCapture.truncate(0)
