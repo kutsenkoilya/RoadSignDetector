@@ -10,7 +10,7 @@ Servo servo;
 unsigned char RightMotor[3] = 
   {PIN_MOTOR_RIGHT_UP, PIN_MOTOR_RIGHT_DN, PIN_MOTOR_RIGHT_SPEED};
 
-int agl = 0;
+int agl = 125;
 int spd = 0;
 int whl = 0;
 
@@ -86,6 +86,9 @@ void setUpMotors(int v_agl, int v_spd, int v_whl)
 
   //задаём угол
   servo.write(v_agl);
+
+  delay(100);
+  
   //проверяем напр движения  
   switch (v_whl)
   {

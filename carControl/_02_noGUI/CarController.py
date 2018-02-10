@@ -59,6 +59,7 @@ camera = PiCamera()
 camera.resolution = (CarSettings.PiCameraResW,CarSettings.PiCameraResH)
 camera.framerate = CarSettings.PiCameraFrameRate
 camera.vflip = True
+camera.hflip = True
 rawCapture = PiRGBArray(camera, size=(CarSettings.PiCameraResW,CarSettings.PiCameraResH))
 
 time.sleep(0.1)
